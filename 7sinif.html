@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5. Sınıf Etkinlikleri</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Cairo&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    .etkinlik-kutu {
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 700px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      font-family: 'Cairo', sans-serif;
+    }
+    .etkinlik-kutu h2 {
+      margin-bottom: 15px;
+      font-size: 1.3em;
+      color: #1e6f5c;
+    }
+    .etkinlik-kutu button {
+      background: #1e6f5c;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .etkinlik-kutu button:hover {
+      background: #145944;
+    }
+    #etkinlikAlani {
+      padding: 40px 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Üst Menü -->
+  <nav class="navbar">
+    <div class="site-title">DKAB ORTAOKUL ETKİNLİK 2025</div>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <ul class="menu" id="menu">
+      <li><a href="index.html">Ana Sayfa</a></li>
+      <li><a href="duyurular.html">Duyurular</a></li>
+      <li><a href="hakkimizda.html">Hakkımızda</a></li>
+      <li><a href="admin.html">Admin Paneli</a></li>
+      <li><a href="iletisim.html">İletişim</a></li>
+    </ul>
+  </nav>
+
+  <!-- Başlık -->
+  <header>
+    <h1 class="baslik">7. Sınıf Etkinlikleri</h1>
+  </header>
+
+  <!-- Etkinlikler -->
+  <div id="etkinlikAlani">Yükleniyor...</div>
+
+  <!-- Alt Bilgi -->
+  <footer>
+    <p><strong>Sayfa:</strong> 7. Sınıf Etkinlikleri</p>
+    <p><strong>Hazırlayan:</strong> Süleyman</p>
+    <p>&copy; 2025 Tüm Hakları Saklıdır</p>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById("menu").classList.toggle("active");
+    }
+
+    const client = supabase.createClient(
+      "https://toxhhtbedgkhbpogiwrp.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRveGhodGJlZGdraGJwb2dpd3JwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwNzY2MTIsImV4cCI6MjA2NzY1MjYxMn0.TXhql-C0rnAdn4QiqmS7_dOAWPwGbreVh2O5-DV0o6Q" // ← kendi anon key’inle değiştir
+    );
+
+    async function etkinlikleriGetir() {
+      const { data, error } = await client
+        .from("etkinlikler")
+        .select("*")
+        .eq("sinif", "7");
+
+      const container = document.getElementById("etkinlikAlani");
+      container.innerHTML = "";
+
+      if (error || !data) {
+        container.textContent = "Etkinlikler yüklenemedi.";
+        return;
+      }
+
+      if (data.length === 0) {
+        container.textContent = "Henüz etkinlik eklenmemiş.";
+        return;
+      }
+
+      data.forEach(item => {
+        const kutu = document.createElement("div");
+        kutu.className = "etkinlik-kutu";
+
+        const baslik = document.createElement("h2");
+        baslik.textContent = item.baslik;
+
+        const buton = document.createElement("button");
+        buton.textContent = "Etkinliği Yeni Sekmede Aç";
+        buton.onclick = () => {
+          if (item.html && item.html.trim()) {
+            const pencere = window.open("", "_blank");
+            pencere.document.open();
+            pencere.document.write(item.html);
+            pencere.document.close();
+          } else {
+            alert("⚠️ Etkinlik içeriği boş.");
+          }
+        };
+
+        kutu.appendChild(baslik);
+        kutu.appendChild(buton);
+        container.appendChild(kutu);
+      });
+    }
+
+    etkinlikleriGetir();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Duyurular</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Cairo&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    .duyuru-kart {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 700px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      font-family: 'Cairo', sans-serif;
+    }
+    .duyuru-kart h3 {
+      margin: 0 0 10px;
+      color: #1e6f5c;
+    }
+    .duyuru-kart p {
+      margin: 0;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Üst Menü -->
+  <nav class="navbar">
+    <div class="site-title">DKAB ORTAOKUL ETKİNLİK 2025</div>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <ul class="menu" id="menu">
+      <li><a href="index.html">Ana Sayfa</a></li>
+      <li><a href="duyurular.html">Duyurular</a></li>
+      <li><a href="hakkimizda.html">Hakkımızda</a></li>
+      <li><a href="admin.html">Admin Paneli</a></li>
+      <li><a href="iletisim.html">İletişim</a></li>
+    </ul>
+  </nav>
+
+  <!-- Başlık -->
+  <header>
+    <h1 class="baslik">📢 Güncel Duyurular</h1>
+  </header>
+
+  <!-- Duyuru Alanı -->
+  <section id="duyuruAlani">Yükleniyor...</section>
+
+  <!-- Alt Bilgi -->
+  <footer>
+    <p><strong>Sayfa:</strong> Duyurular</p>
+    <p><strong>Hazırlayan:</strong> Süleyman</p>
+    <p>&copy; 2025 Tüm Hakları Saklıdır</p>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById("menu").classList.toggle("active");
+    }
+
+    const client = supabase.createClient(
+      "https://toxhhtbedgkhbpogiwrp.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRveGhodGJlZGdraGJwb2dpd3JwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwNzY2MTIsImV4cCI6MjA2NzY1MjYxMn0.TXhql-C0rnAdn4QiqmS7_dOAWPwGbreVh2O5-DV0o6Q" // ← anon key’inle değiştir
+    );
+
+    async function duyurulariGetir() {
+      const { data, error } = await client
+        .from("duyurular")
+        .select("*")
+        .order("tarih", { ascending: false });
+
+      const container = document.getElementById("duyuruAlani");
+      container.innerHTML = "";
+
+      if (error || !data || data.length === 0) {
+        container.textContent = "Henüz duyuru bulunamadı.";
+        return;
+      }
+
+      data.forEach(item => {
+        const kart = document.createElement("div");
+        kart.className = "duyuru-kart";
+
+        const baslik = document.createElement("h3");
+        baslik.textContent = item.baslik;
+
+        const tarih = document.createElement("p");
+        tarih.textContent = item.tarih ? `🗓️ ${item.tarih}` : "";
+
+        kart.appendChild(baslik);
+        kart.appendChild(tarih);
+        container.appendChild(kart);
+      });
+    }
+
+    duyurulariGetir();
+  </script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Paneli</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Cairo&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="adminpanel.js"></script>
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: #f0f4f8;
+      margin: 0;
+    }
+    .bolum {
+      max-width: 800px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    label {
+      font-weight: bold;
+      margin-top: 15px;
+      display: block;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1em;
+    }
+    button {
+      background: #1e6f5c;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 14px;
+    }
+    button:hover {
+      background: #145944;
+    }
+    .etkinlik-kutu, .duyuru-kutu {
+      background: #f9f9f9;
+      margin: 20px 0;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .etkinlik-kutu h3, .duyuru-kutu h3 {
+      margin-top: 0;
+      color: #1e6f5c;
+    }
+    .islemler {
+      margin-top: 15px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.9em;
+      color: #777;
+      padding: 30px 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Üst Menü -->
+  <nav class="navbar">
+    <div class="site-title">DKAB ORTAOKUL ETKİNLİK 2025</div>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <ul class="menu" id="menu">
+      <li><a href="index.html">Ana Sayfa</a></li>
+      <li><a href="duyurular.html">Duyurular</a></li>
+      <li><a href="hakkimizda.html">Hakkımızda</a></li>
+      <li><a href="admin.html">Admin Paneli</a></li>
+      <li><a href="iletisim.html">İletişim</a></li>
+    </ul>
+  </nav>
+
+  <header>
+    <h1 class="baslik">Admin Paneli</h1>
+  </header>
+
+  <!-- Etkinlik Ekle -->
+  <section class="bolum">
+    <h2>Etkinlik Ekle / Güncelle</h2>
+    <form id="etkinlikFormu" onsubmit="event.preventDefault(); etkinlikEkle();">
+      <label for="sinifSec">Sınıf</label>
+      <select id="sinifSec" required>
+        <option value="">Seçiniz</option>
+        <option value="5">5. Sınıf</option>
+        <option value="6">6. Sınıf</option>
+        <option value="7">7. Sınıf</option>
+        <option value="8">8. Sınıf</option>
+      </select>
+      <label for="baslik">Başlık</label>
+      <input type="text" id="baslik" required />
+      <label for="htmlKod">HTML İçeriği</label>
+      <textarea id="htmlKod" rows="5" required></textarea>
+      <button type="submit">Kaydet</button>
+    </form>
+  </section>
+
+  <!-- Etkinlik Listeleme -->
+  <section class="bolum">
+    <h2>Etkinlik Listesi</h2>
+    <label for="listeSinif">Sınıf Filtrele</label>
+    <select id="listeSinif" onchange="etkinlikleriListele()">
+      <option value="">Tümü</option>
+      <option value="5">5. Sınıf</option>
+      <option value="6">6. Sınıf</option>
+      <option value="7">7. Sınıf</option>
+      <option value="8">8. Sınıf</option>
+    </select>
+    <div id="listeAlani">Yükleniyor...</div>
+  </section>
+
+  <!-- Duyuru Ekle -->
+  <section class="bolum">
+    <h2>Duyuru Ekle / Güncelle</h2>
+    <form id="duyuruFormu" onsubmit="event.preventDefault(); duyuruEkle();">
+      <label for="duyuruBaslik">Duyuru Başlığı</label>
+      <input type="text" id="duyuruBaslik" required />
+      <label for="duyuruTarih">Tarih (Opsiyonel)</label>
+      <input type="date" id="duyuruTarih" />
+      <button type="submit">Duyuruyu Kaydet</button>
+    </form>
+  </section>
+
+  <!-- Duyuru Listeleme -->
+  <section class="bolum">
+    <h2>Duyuru Listesi</h2>
+    <div id="duyuruAlani">Yükleniyor...</div>
+  </section>
+
+  <footer>
+    <p><strong>Panel:</strong> Etkinlik & Duyuru yönetimi</p>
+    <p><strong>Hazırlayan:</strong> Süleyman</p>
+    <p>&copy; 2025 Tüm Hakları Saklıdır</p>
+  </footer>
+
+</body>
+</html>

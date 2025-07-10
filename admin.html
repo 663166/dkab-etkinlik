@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Girişi</title>
+  <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Cairo&display=swap" rel="stylesheet">
+  <style>
+    .admin-giris {
+      max-width: 400px;
+      margin: 80px auto;
+      padding: 30px;
+      background-color: #E8F5E9;
+      border: 2px solid #2F7D3A;
+      border-radius: 10px;
+      text-align: center;
+    }
+
+    .admin-giris h2 {
+      margin-bottom: 20px;
+      color: #2F7D3A;
+    }
+
+    .admin-giris input {
+      width: 80%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .admin-giris button {
+      padding: 10px 20px;
+      background-color: #2F7D3A;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .admin-giris .hata {
+      color: red;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="site-title">DKAB ORTAOKUL ETKİNLİK 2025</div>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <ul class="menu" id="menu">
+      <li><a href="index.html">Ana Sayfa</a></li>
+      <li><a href="duyurular.html">Duyurular</a></li>
+      <li><a href="hakkimizda.html">Hakkımızda</a></li>
+      <li><a href="admin.html">Admin Paneli</a></li>
+      <li><a href="iletisim.html">İletişim</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <div class="admin-giris">
+      <h2>🔐 Admin Girişi</h2>
+      <input type="password" id="sifre" placeholder="Şifre giriniz" />
+      <br />
+      <button onclick="kontrolEt()">Giriş Yap</button>
+      <p class="hata" id="hata">Hatalı şifre. Tekrar deneyin.</p>
+    </div>
+  </main>
+
+  <footer>
+    <p><strong>Hazırlayan:</strong> Süleyman</p>
+    <p>&copy; 2025 DKAB Ortaokul Etkinlik Portalı</p>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById("menu").classList.toggle("active");
+    }
+
+    function kontrolEt() {
+      const sifre = document.getElementById("sifre").value;
+      const hata = document.getElementById("hata");
+
+      // Geçici statik şifre — ileride sunucu tarafında koruma yapılabilir
+      if (sifre === "dkab2025admin") {
+        window.location.href = "adminpanel.html";
+      } else {
+        hata.style.display = "block";
+      }
+    }
+  </script>
+</body>
+</html>

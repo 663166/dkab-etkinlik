@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hakkımızda</title>
+  <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Cairo&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="site-title">DKAB ORTAOKUL ETKİNLİK 2025</div>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <ul class="menu" id="menu">
+      <li><a href="index.html">Ana Sayfa</a></li>
+      <li><a href="duyurular.html">Duyurular</a></li>
+      <li><a href="hakkimizda.html">Hakkımızda</a></li>
+      <li><a href="admin.html">Admin Paneli</a></li>
+      <li><a href="iletisim.html">İletişim</a></li>
+    </ul>
+  </nav>
+
+  <header>
+    <h1 class="baslik">🧕 Hakkımızda</h1>
+  </header>
+
+  <section class="duyurular">
+    <p><strong>DKAB Ortaokul Etkinlik Portalı</strong>, 5-8. sınıf öğrencileri için din kültürü ve ahlak bilgisi etkinliklerini modern, erişilebilir ve anlamlı bir şekilde sunmak amacıyla hazırlanmıştır.</p>
+
+    <p>Bu proje, teknolojiyi İslami değerlerle buluşturmayı hedefler. Sade tasarımı, güncel etkinlikleri ve kültürel motifiyle öğrencilerin ilim yolculuğunu destekler.</p>
+
+    <p><strong>Hazırlayan:</strong> Süleyman <br />
+    <em>“İlim öğrenmek her Müslümana farzdır.” (Hadis-i Şerif)</em></p>
+  </section>
+
+  <footer>
+    <p><strong>Hazırlayan:</strong> Süleyman</p>
+    <p>&copy; 2025 DKAB Ortaokul Etkinlik Portalı</p>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById("menu").classList.toggle("active");
+    }
+  </script>
+</body>
+</html>
