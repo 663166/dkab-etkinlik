@@ -8,9 +8,5 @@ Disallow: /wp-admin/
 Disallow: /wp-login.php
 Disallow: /readme.html
 
-# Sitenin kendi arama sonuçları sayfalarını engelle (yinelenen içerik olarak görülmesini önler)
-Disallow: /?s=
-Disallow: /search/
-
 # Arama motorlarına site haritamızın yerini bildir
-Sitemap: https://dkabortaokuletkinlik.com.tr/sitemap_index.xml
+Sitemap: https://dkabortaokuletkinlik.com.tr/sitemap.xml
