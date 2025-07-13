@@ -1,0 +1,16 @@
+# Bu robots.txt dosyası dkabortaokuletkinlik.com.tr için oluşturulmuştur.
+User-agent: *
+
+# WordPress yönetim paneli sayfalarını engelle
+# Not: admin-ajax.php, sitenin ön yüzde düzgün çalışması için gerekli olabilir, bu yüzden ona izin verilir.
+Allow: /wp-admin/admin-ajax.php
+Disallow: /wp-admin/
+Disallow: /wp-login.php
+Disallow: /readme.html
+
+# Sitenin kendi arama sonuçları sayfalarını engelle (yinelenen içerik olarak görülmesini önler)
+Disallow: /?s=
+Disallow: /search/
+
+# Arama motorlarına site haritamızın yerini bildir
+Sitemap: https://dkabortaokuletkinlik.com.tr/sitemap_index.xml
