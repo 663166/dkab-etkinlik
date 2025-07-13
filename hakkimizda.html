@@ -26,12 +26,7 @@
   </header>
 
   <section class="duyurular">
-    <p><strong>DKAB Ortaokul Etkinlik Portalı</strong>, 5-8. sınıf öğrencileri için din kültürü ve ahlak bilgisi etkinliklerini modern, erişilebilir ve anlamlı bir şekilde sunmak amacıyla hazırlanmıştır.</p>
-
-    <p>Bu proje, teknolojiyi İslami değerlerle buluşturmayı hedefler. Sade tasarımı, güncel etkinlikleri ve kültürel motifiyle öğrencilerin ilim yolculuğunu destekler.</p>
-
-    <p><strong>Hazırlayan:</strong> Süleyman <br />
-    <em>“İlim öğrenmek her Müslümana farzdır.” (Hadis-i Şerif)</em></p>
+    <div id="hakkimizdaIcerik">Yükleniyor...</div>
   </section>
 
   <footer>
@@ -39,10 +34,29 @@
     <p>&copy; 2025 DKAB Ortaokul Etkinlik Portalı</p>
   </footer>
 
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     function toggleMenu() {
       document.getElementById("menu").classList.toggle("active");
     }
+
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function hakkimizdaGetir() {
+      const { data, error } = await client
+        .from("hakkimizda")
+        .select("icerik")
+        .limit(1)
+        .single();
+      const div = document.getElementById("hakkimizdaIcerik");
+      if (error || !data) {
+        div.textContent = "Hakkımızda içeriği yüklenemedi.";
+        return;
+      }
+      div.innerHTML = data.icerik;
+    }
+    hakkimizdaGetir();
   </script>
 </body>
 </html>

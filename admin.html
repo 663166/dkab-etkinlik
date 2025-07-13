@@ -64,10 +64,11 @@
   <main>
     <div class="admin-giris">
       <h2>🔐 Admin Girişi</h2>
-      <input type="password" id="sifre" placeholder="Şifre giriniz" />
+      <input type="email" id="email" placeholder="E-posta adresi" required />
+      <input type="password" id="sifre" placeholder="Şifre" required />
       <br />
-      <button onclick="kontrolEt()">Giriş Yap</button>
-      <p class="hata" id="hata">Hatalı şifre. Tekrar deneyin.</p>
+      <button onclick="girisYap()">Giriş Yap</button>
+      <p class="hata" id="hata"></p>
     </div>
   </main>
 
@@ -76,20 +77,32 @@
     <p>&copy; 2025 DKAB Ortaokul Etkinlik Portalı</p>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
   <script>
     function toggleMenu() {
       document.getElementById("menu").classList.toggle("active");
     }
 
-    function kontrolEt() {
+    const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function girisYap() {
+      const email = document.getElementById("email").value;
       const sifre = document.getElementById("sifre").value;
       const hata = document.getElementById("hata");
-
-      // Geçici statik şifre — ileride sunucu tarafında koruma yapılabilir
-      if (sifre === "dkab2025admin") {
-        window.location.href = "adminpanel.html";
-      } else {
+      hata.style.display = "none";
+      hata.textContent = "";
+      if (!email || !sifre) {
+        hata.textContent = "Lütfen e-posta ve şifre girin.";
         hata.style.display = "block";
+        return;
+      }
+      const { data, error } = await client.auth.signInWithPassword({ email, password: sifre });
+      if (error) {
+        hata.textContent = error.message;
+        hata.style.display = "block";
+      } else {
+        window.location.href = "adminpanel.html";
       }
     }
   </script>

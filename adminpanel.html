@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Cairo&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="adminpanel.js"></script>
+  <script src="config.js"></script>
   <style>
     body {
       font-family: 'Cairo', sans-serif;
@@ -79,6 +80,8 @@
   <!-- Üst Menü -->
   <nav class="navbar">
     <div class="site-title">DKAB ORTAOKUL ETKİNLİK 2025</div>
+    <div style="flex:1"></div>
+    <button id="logoutBtn" style="background:#fff; color:#2F7D3A; border:1.5px solid #2F7D3A; border-radius:8px; padding:6px 16px; font-weight:bold; cursor:pointer;">Çıkış Yap</button>
     <div class="menu-toggle" onclick="toggleMenu()">☰</div>
     <ul class="menu" id="menu">
       <li><a href="index.html">Ana Sayfa</a></li>
@@ -93,57 +96,75 @@
     <h1 class="baslik">Admin Paneli</h1>
   </header>
 
-  <!-- Etkinlik Ekle -->
-  <section class="bolum">
-    <h2>Etkinlik Ekle / Güncelle</h2>
-    <form id="etkinlikFormu" onsubmit="event.preventDefault(); etkinlikEkle();">
-      <label for="sinifSec">Sınıf</label>
-      <select id="sinifSec" required>
-        <option value="">Seçiniz</option>
+  <main class="admin-panel">
+    <section class="admin-card">
+      <h2>Etkinlik Ekle / Güncelle</h2>
+      <form id="etkinlikFormu" onsubmit="event.preventDefault(); etkinlikEkle();">
+        <label for="sinifSec">Sınıf</label>
+        <select id="sinifSec" required>
+          <option value="">Seçiniz</option>
+          <option value="5">5. Sınıf</option>
+          <option value="6">6. Sınıf</option>
+          <option value="7">7. Sınıf</option>
+          <option value="8">8. Sınıf</option>
+        </select>
+        <label for="baslik">Başlık</label>
+        <input type="text" id="baslik" required />
+        <label for="htmlKod">HTML İçeriği</label>
+        <textarea id="htmlKod" rows="5" required></textarea>
+        <div style="margin:10px 0;">
+          <label for="dosyaInput">Dosya Yükle (ses, resim, pdf, video):</label>
+          <input type="file" id="dosyaInput" accept="audio/*,image/*,application/pdf,video/*" />
+          <button type="button" onclick="dosyaYukle()">Yükle</button>
+          <input type="text" id="dosyaUrl" readonly placeholder="Yüklenen dosyanın URL'si burada görünecek" style="margin-top:6px;width:100%;" />
+        </div>
+        <button type="submit">Kaydet</button>
+      </form>
+    </section>
+
+    <section class="admin-card">
+      <h2>Etkinlik Listesi</h2>
+      <label for="listeSinif">Sınıf Filtrele</label>
+      <select id="listeSinif" onchange="etkinlikleriListele()">
+        <option value="">Tümü</option>
         <option value="5">5. Sınıf</option>
         <option value="6">6. Sınıf</option>
         <option value="7">7. Sınıf</option>
         <option value="8">8. Sınıf</option>
       </select>
-      <label for="baslik">Başlık</label>
-      <input type="text" id="baslik" required />
-      <label for="htmlKod">HTML İçeriği</label>
-      <textarea id="htmlKod" rows="5" required></textarea>
-      <button type="submit">Kaydet</button>
-    </form>
-  </section>
+      <div id="listeAlani">Yükleniyor...</div>
+    </section>
 
-  <!-- Etkinlik Listeleme -->
-  <section class="bolum">
-    <h2>Etkinlik Listesi</h2>
-    <label for="listeSinif">Sınıf Filtrele</label>
-    <select id="listeSinif" onchange="etkinlikleriListele()">
-      <option value="">Tümü</option>
-      <option value="5">5. Sınıf</option>
-      <option value="6">6. Sınıf</option>
-      <option value="7">7. Sınıf</option>
-      <option value="8">8. Sınıf</option>
-    </select>
-    <div id="listeAlani">Yükleniyor...</div>
-  </section>
+    <section class="admin-card">
+      <h2>Duyuru Ekle / Güncelle</h2>
+      <form id="duyuruFormu" onsubmit="event.preventDefault(); duyuruEkle();">
+        <label for="duyuruBaslik">Duyuru Başlığı</label>
+        <input type="text" id="duyuruBaslik" required />
+        <label for="duyuruTarih">Tarih (Opsiyonel)</label>
+        <input type="date" id="duyuruTarih" />
+        <button type="submit">Duyuruyu Kaydet</button>
+      </form>
+    </section>
 
-  <!-- Duyuru Ekle -->
-  <section class="bolum">
-    <h2>Duyuru Ekle / Güncelle</h2>
-    <form id="duyuruFormu" onsubmit="event.preventDefault(); duyuruEkle();">
-      <label for="duyuruBaslik">Duyuru Başlığı</label>
-      <input type="text" id="duyuruBaslik" required />
-      <label for="duyuruTarih">Tarih (Opsiyonel)</label>
-      <input type="date" id="duyuruTarih" />
-      <button type="submit">Duyuruyu Kaydet</button>
-    </form>
-  </section>
+    <section class="admin-card">
+      <h2>Duyuru Listesi</h2>
+      <div id="duyuruAlani">Yükleniyor...</div>
+    </section>
 
-  <!-- Duyuru Listeleme -->
-  <section class="bolum">
-    <h2>Duyuru Listesi</h2>
-    <div id="duyuruAlani">Yükleniyor...</div>
-  </section>
+    <section class="admin-card">
+      <h2>Hakkımızda İçeriğini Düzenle</h2>
+      <form id="hakkimizdaForm" onsubmit="event.preventDefault(); hakkimizdaKaydet();">
+        <label for="hakkimizdaTextarea">Hakkımızda İçeriği</label>
+        <textarea id="hakkimizdaTextarea" rows="6" required oninput="hakkimizdaOnizle()"></textarea>
+        <button type="submit">Kaydet</button>
+        <span id="hakkimizdaDurum" style="margin-left:10px;"></span>
+      </form>
+      <div class="onizleme">
+        <h3>Önizleme</h3>
+        <div id="hakkimizdaOnizleme" style="min-height:40px;"></div>
+      </div>
+    </section>
+  </main>
 
   <footer>
     <p><strong>Panel:</strong> Etkinlik & Duyuru yönetimi</p>
@@ -151,5 +172,110 @@
     <p>&copy; 2025 Tüm Hakları Saklıdır</p>
   </footer>
 
+  <script>
+    // Tema geçişi
+    function temaGuncelle() {
+      const dark = localStorage.getItem('tema') === 'dark';
+      document.body.classList.toggle('dark-mode', dark);
+      var temaBtn = document.getElementById('temaBtn');
+      if (temaBtn) {
+        temaBtn.textContent = dark ? '☀️' : '🌙';
+      }
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      temaGuncelle();
+      var temaBtn = document.getElementById('temaBtn');
+      if (temaBtn) {
+        temaBtn.onclick = () => {
+          const dark = !(localStorage.getItem('tema') === 'dark');
+          localStorage.setItem('tema', dark ? 'dark' : 'light');
+          temaGuncelle();
+        };
+      }
+    });
+
+    // Oturum kontrolü
+    async function oturumKontrol() {
+      const { data } = await client.auth.getSession();
+      if (!data.session) {
+        window.location.href = "admin.html";
+      }
+    }
+    oturumKontrol();
+
+    // Çıkış butonu
+    document.getElementById('logoutBtn').onclick = async function() {
+      await client.auth.signOut();
+      window.location.href = "admin.html";
+    };
+
+    async function hakkimizdaGetirAdmin() {
+      const { data, error } = await client
+        .from("hakkimizda")
+        .select("id, icerik")
+        .limit(1)
+        .single();
+      if (!error && data) {
+        document.getElementById("hakkimizdaTextarea").value = data.icerik;
+        document.getElementById("hakkimizdaTextarea").dataset.id = data.id;
+        document.getElementById("hakkimizdaOnizleme").innerHTML = data.icerik;
+      }
+    }
+
+    function hakkimizdaOnizle() {
+      document.getElementById("hakkimizdaOnizleme").innerHTML = document.getElementById("hakkimizdaTextarea").value;
+    }
+
+    async function hakkimizdaKaydet() {
+      const textarea = document.getElementById("hakkimizdaTextarea");
+      const durum = document.getElementById("hakkimizdaDurum");
+      const id = textarea.dataset.id;
+      const icerik = textarea.value;
+      durum.textContent = "Kaydediliyor...";
+      let result;
+      try {
+        if (id) {
+          result = await client.from("hakkimizda").update({ icerik }).eq("id", id);
+        } else {
+          result = await client.from("hakkimizda").insert({ icerik });
+        }
+        if (result.error) {
+          durum.textContent = "Hata: " + result.error.message + " (" + JSON.stringify(result.error) + ")";
+        } else {
+          durum.textContent = "Başarıyla kaydedildi!";
+          document.getElementById("hakkimizdaOnizleme").innerHTML = icerik;
+        }
+      } catch (e) {
+        durum.textContent = "JS Hatası: " + e.message;
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", hakkimizdaGetirAdmin);
+
+    async function dosyaYukle() {
+      const fileInput = document.getElementById('dosyaInput');
+      const file = fileInput.files[0];
+      const urlInput = document.getElementById('dosyaUrl');
+      if (!file) return alert('Lütfen bir dosya seçin!');
+      const uzanti = file.name.split('.').pop().toLowerCase();
+      const dosyaAdi = Date.now() + '-' + Math.random().toString(36).substr(2,6) + '.' + uzanti;
+      const { data, error } = await client.storage.from('etkinlik-dosyalar').upload('etkinlikler/' + dosyaAdi, file, { upsert: true });
+      if (error) {
+        urlInput.value = '';
+        alert('Yükleme hatası: ' + error.message);
+        return;
+      }
+      const result = client.storage.from('etkinlik-dosyalar').getPublicUrl('etkinlikler/' + dosyaAdi);
+      console.log('getPublicUrl sonucu:', result);
+      const publicUrl = result.publicUrl;
+      if (!publicUrl) {
+        urlInput.value = '';
+        alert('URL alınamadı! Bucket public mi? Yolu doğru mu?');
+        return;
+      }
+      urlInput.value = publicUrl;
+      alert('Dosya yüklendi! URL’yi HTML içeriğine ekleyebilirsiniz.');
+    }
+  </script>
 </body>
 </html>

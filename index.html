@@ -30,7 +30,6 @@
 .sinif-kart:hover {
   background: #145944;
 }
-    }
     .duyuru-kart {
       background: #fff;
       border-radius: 10px;
@@ -101,7 +100,11 @@
   <!-- Duyurular Bölümü -->
   <section class="duyurular-bolumu">
     <h2>📢 Güncel Duyurular</h2>
-    <div id="duyurularKutusu">Yükleniyor...</div>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+      <button id="duyuruPrev" aria-label="Önceki Duyuru" style="font-size:1.5em; background:none; border:none; color:#2F7D3A; cursor:pointer;">&#8592;</button>
+      <div id="duyurularKutusu" style="min-width:220px; max-width:700px; flex:1;">Yükleniyor...</div>
+      <button id="duyuruNext" aria-label="Sonraki Duyuru" style="font-size:1.5em; background:none; border:none; color:#2F7D3A; cursor:pointer;">&#8594;</button>
+    </div>
     <a href="duyurular.html">Tüm Duyuruları Gör</a>
   </section>
 
@@ -112,46 +115,104 @@
     <p>&copy; 2025 Tüm Hakları Saklıdır</p>
   </footer>
 
+  <script src="config.js"></script>
   <script>
     function toggleMenu() {
       document.getElementById("menu").classList.toggle("active");
     }
 
     const client = supabase.createClient(
-      "https://toxhhtbedgkhbpogiwrp.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRveGhodGJlZGdraGJwb2dpd3JwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwNzY2MTIsImV4cCI6MjA2NzY1MjYxMn0.TXhql-C0rnAdn4QiqmS7_dOAWPwGbreVh2O5-DV0o6Q" // ← kendi anon key’inle değiştir
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
     );
+
+    let duyurularData = [];
+    let aktifDuyuru = 0;
+    let duyuruInterval = null;
+    let dokunBaslangicX = null;
 
     async function duyurulariGetir() {
       const { data, error } = await client
         .from("duyurular")
         .select("*")
         .order("tarih", { ascending: false })
-        .limit(5);
+        .limit(10);
 
+      duyurularData = data || [];
+      aktifDuyuru = 0;
+      duyuruGoster();
+      duyuruOtoGecisBaslat();
+    }
+
+    function duyuruGoster() {
       const container = document.getElementById("duyurularKutusu");
       container.innerHTML = "";
-
-      if (error || !data || data.length === 0) {
+      if (!duyurularData.length) {
         container.textContent = "Henüz duyuru yok.";
         return;
       }
-
-      data.forEach(item => {
-        const kart = document.createElement("div");
-        kart.className = "duyuru-kart";
-
-        const baslik = document.createElement("h3");
-        baslik.textContent = item.baslik;
-
-        const tarih = document.createElement("p");
-        tarih.textContent = item.tarih ? `🗓️ ${item.tarih}` : "";
-
-        kart.appendChild(baslik);
-        kart.appendChild(tarih);
-        container.appendChild(kart);
-      });
+      const item = duyurularData[aktifDuyuru];
+      const kart = document.createElement("div");
+      kart.className = "duyuru-kart";
+      const baslik = document.createElement("h3");
+      baslik.textContent = item.baslik;
+      const tarih = document.createElement("p");
+      tarih.textContent = item.tarih ? `🗓️ ${item.tarih}` : "";
+      kart.appendChild(baslik);
+      kart.appendChild(tarih);
+      container.appendChild(kart);
     }
+
+    function duyuruOtoGecisBaslat() {
+      if (duyuruInterval) clearInterval(duyuruInterval);
+      duyuruInterval = setInterval(() => {
+        if (!duyurularData.length) return;
+        aktifDuyuru = (aktifDuyuru + 1) % duyurularData.length;
+        duyuruGoster();
+      }, 5000); // 5 saniyede bir geçiş
+    }
+
+    function duyuruOtoGecisDurdur() {
+      if (duyuruInterval) clearInterval(duyuruInterval);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("duyuruPrev").onclick = () => {
+        if (!duyurularData.length) return;
+        aktifDuyuru = (aktifDuyuru - 1 + duyurularData.length) % duyurularData.length;
+        duyuruGoster();
+        duyuruOtoGecisBaslat();
+      };
+      document.getElementById("duyuruNext").onclick = () => {
+        if (!duyurularData.length) return;
+        aktifDuyuru = (aktifDuyuru + 1) % duyurularData.length;
+        duyuruGoster();
+        duyuruOtoGecisBaslat();
+      };
+      // Dokunmatik kaydırma
+      const kutu = document.getElementById("duyurularKutusu");
+      kutu.addEventListener("touchstart", (e) => {
+        dokunBaslangicX = e.touches[0].clientX;
+        duyuruOtoGecisDurdur();
+      });
+      kutu.addEventListener("touchend", (e) => {
+        if (dokunBaslangicX === null) return;
+        const dokunBitisX = e.changedTouches[0].clientX;
+        const fark = dokunBitisX - dokunBaslangicX;
+        if (Math.abs(fark) > 40) {
+          if (fark < 0) {
+            // sola kaydır: sonraki
+            aktifDuyuru = (aktifDuyuru + 1) % duyurularData.length;
+          } else {
+            // sağa kaydır: önceki
+            aktifDuyuru = (aktifDuyuru - 1 + duyurularData.length) % duyurularData.length;
+          }
+          duyuruGoster();
+        }
+        dokunBaslangicX = null;
+        duyuruOtoGecisBaslat();
+      });
+    });
 
     duyurulariGetir();
   </script>

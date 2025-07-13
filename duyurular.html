@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Cairo&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
   <style>
     .duyuru-kart {
       background: #fff;
@@ -65,8 +66,8 @@
     }
 
     const client = supabase.createClient(
-      "https://toxhhtbedgkhbpogiwrp.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRveGhodGJlZGdraGJwb2dpd3JwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIwNzY2MTIsImV4cCI6MjA2NzY1MjYxMn0.TXhql-C0rnAdn4QiqmS7_dOAWPwGbreVh2O5-DV0o6Q" // ← anon key’inle değiştir
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
     );
 
     async function duyurulariGetir() {
