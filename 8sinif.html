@@ -3,19 +3,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>5. Sınıf Etkinlikleri</title>
+  <title>8. Sınıf Etkinlikleri</title>
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Cairo&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
+    /* ETKİNLİK KUTULARINI YAN YANA SIRALAMAK İÇİN BURADAKİ KOD GÜNCELLENDİ */
+    #etkinlikAlani {
+      padding: 40px 20px;
+      display: flex; /* Kapsayıcıyı flex konteyner yapar */
+      flex-wrap: wrap; /* Öğelerin bir sonraki satıra geçmesine izin verir */
+      justify-content: center; /* Öğeleri yatayda ortalar */
+      gap: 20px; /* Öğeler arasında boşluk bırakır */
+    }
+
     .etkinlik-kutu {
       background: #ffffff;
       border-radius: 10px;
       padding: 20px;
-      margin: 20px auto;
-      max-width: 700px;
+      margin: 0; /* Mevcut margin'i kaldırıyoruz, gap boşlukları yönetecek */
+      max-width: 300px; /* Her bir kutu için maksimum genişlik belirler */
+      flex: 1 1 auto; /* Kutuların büyümesine ve küçülmesine izin verir, temel boyutu otomatik ayarlar */
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       text-align: center;
       font-family: 'Cairo', sans-serif;
@@ -37,14 +47,17 @@
     .etkinlik-kutu button:hover {
       background: #145944;
     }
-    #etkinlikAlani {
-      padding: 40px 20px;
+
+    /* İsteğe bağlı: Çok küçük ekranlarda kutuların tam genişlik almasını sağlar */
+    @media (max-width: 600px) {
+      .etkinlik-kutu {
+        max-width: 100%; /* Küçük ekranlarda kutuların tam genişlik almasını sağlar */
+      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Üst Menü -->
   <nav class="navbar">
     <div class="site-title">DKAB ORTAOKUL ETKİNLİK 2025</div>
     <div class="menu-toggle" onclick="toggleMenu()">☰</div>
@@ -57,18 +70,15 @@
     </ul>
   </nav>
 
-  <!-- Başlık -->
   <header>
     <h1 class="baslik">8. Sınıf Etkinlikleri</h1>
   </header>
 
-  <!-- Etkinlikler -->
   <div id="etkinlikAlani">Yükleniyor...</div>
 
-  <!-- Alt Bilgi -->
   <footer>
     <p><strong>Sayfa:</strong> 8. Sınıf Etkinlikleri</p>
-    <p><strong>Hazırlayan:</strong> Süleyman</p>
+    <p><strong>Hazırlayan:</strong> Süleyman Atak</p>
     <p>&copy; 2025 Tüm Hakları Saklıdır</p>
   </footer>
 
@@ -87,7 +97,7 @@
       const { data, error } = await client
         .from("etkinlikler")
         .select("*")
-        .eq("sinif", "8");
+        .eq("sinif", "8"); // BURADA "sinif" değeri "8" olarak güncellendi
 
       const container = document.getElementById("etkinlikAlani");
       container.innerHTML = "";
